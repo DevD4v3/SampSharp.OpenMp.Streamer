@@ -12,7 +12,9 @@ namespace SampSharp.Streamer.Entities.Interop;
 /// </summary>
 internal static partial class StreamerInterop
 {
-    private const string Lib = "SampSharp";
+    // Our own open.mp component — SampSharp.Streamer.dll — is loaded by the server from
+    // env/components/. LoadLibrary finds already-loaded modules by short name without extension.
+    private const string Lib = "SampSharp.Streamer";
 
     [LibraryImport(Lib)]
     [return: MarshalAs(UnmanagedType.I1)]
