@@ -107,6 +107,20 @@ public sealed class StreamerService : IStreamerService
         return new DynamicCheckpoint(id, position, size);
     }
 
+    public DynamicActor CreateDynamicActor(int modelId, Vector3 position, float rotation,
+        bool invulnerable = true, float health = 100f,
+        float streamDistance = 300f,
+        int virtualWorld = -1, int interior = -1, EntityId player = default,
+        EntityId area = default, int priority = 0)
+    {
+        int id = StreamerInterop.Streamer_Actor_Create(modelId,
+            position.X, position.Y, position.Z, rotation,
+            invulnerable, health, streamDistance,
+            virtualWorld, interior, EntityToInt(player, InvalidId),
+            EntityToInt(area, -1), priority);
+        return new DynamicActor(id, modelId, position, rotation);
+    }
+
     // EntityId хэширует Guid → стабильный int ≠ playerid. Для streamer-а filter-id
     // берутся игровые (0..MAX_PLAYERS-1); пока proxy: пустой EntityId → "no filter".
     private static int EntityToInt(EntityId id, int defaultValue)

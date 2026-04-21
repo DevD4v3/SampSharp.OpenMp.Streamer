@@ -58,4 +58,11 @@ public interface IStreamerService
     DynamicCheckpoint CreateDynamicCheckpoint(Vector3 position, float size,
         int virtualWorld = -1, int interior = -1, EntityId player = default,
         float streamDistance = 200f, EntityId area = default, int priority = 0);
+
+    // Actors
+    DynamicActor CreateDynamicActor(int modelId, Vector3 position, float rotation,
+        bool invulnerable = true, float health = 100f,
+        float streamDistance = 300f,
+        int virtualWorld = -1, int interior = -1, EntityId player = default,
+        EntityId area = default, int priority = 0);
 }

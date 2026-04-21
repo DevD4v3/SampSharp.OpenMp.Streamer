@@ -120,6 +120,28 @@ struct IStreamerComponent : public IExtension
     virtual bool destroyCheckpoint(int cpId) = 0;
     virtual bool isValidCheckpoint(int cpId) = 0;
 
+    virtual int  createActor(int modelId, float x, float y, float z, float rotation,
+        bool invulnerable, float health, float streamDistance,
+        int worldId, int interiorId, int playerId, int areaId, int priority) = 0;
+    virtual bool destroyActor(int actorId) = 0;
+    virtual bool isValidActor(int actorId) = 0;
+
+    virtual bool applyActorAnimation(int actorId, const char* animLib, const char* animName,
+        float delta, bool loop, bool lockX, bool lockY, bool freeze, int timeMs) = 0;
+    virtual bool clearActorAnimations(int actorId) = 0;
+
+    virtual bool getActorPos(int actorId, float& outX, float& outY, float& outZ) = 0;
+    virtual bool setActorPos(int actorId, float x, float y, float z) = 0;
+    virtual bool getActorFacingAngle(int actorId, float& outAngle) = 0;
+    virtual bool setActorFacingAngle(int actorId, float angle) = 0;
+
+    virtual bool getActorHealth(int actorId, float& outHealth) = 0;
+    virtual bool setActorHealth(int actorId, float health) = 0;
+    virtual bool isActorInvulnerable(int actorId) = 0;
+    virtual bool setActorInvulnerable(int actorId, bool invulnerable) = 0;
+    virtual int  getActorVirtualWorld(int actorId) = 0;
+    virtual bool setActorVirtualWorld(int actorId, int worldId) = 0;
+
     virtual void addEventHandler(IStreamerEventHandler* handler) = 0;
     virtual void removeEventHandler(IStreamerEventHandler* handler) = 0;
 

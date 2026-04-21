@@ -241,6 +241,40 @@ extern "C" SDK_EXPORT int __CDECL Streamer_Checkpoint_Create(float x, float y, f
 extern "C" SDK_EXPORT bool __CDECL Streamer_Checkpoint_Destroy(int id) { return g_streamer && g_streamer->destroyCheckpoint(id); }
 extern "C" SDK_EXPORT bool __CDECL Streamer_Checkpoint_IsValid(int id) { return g_streamer && g_streamer->isValidCheckpoint(id); }
 
+extern "C" SDK_EXPORT int __CDECL Streamer_Actor_Create(int modelId,
+    float x, float y, float z, float rotation,
+    bool invulnerable, float health, float streamDistance,
+    int w, int i, int p, int a, int pr)
+{ return g_streamer ? g_streamer->createActor(modelId, x, y, z, rotation, invulnerable, health,
+    streamDistance, w, i, p, a, pr) : 0; }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_Destroy(int id) { return g_streamer && g_streamer->destroyActor(id); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_IsValid(int id) { return g_streamer && g_streamer->isValidActor(id); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_ApplyAnimation(int id, const char* lib, const char* name,
+    float delta, bool loop, bool lockX, bool lockY, bool freeze, int timeMs)
+{ return g_streamer && g_streamer->applyActorAnimation(id, lib, name, delta, loop, lockX, lockY, freeze, timeMs); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_ClearAnimations(int id)
+{ return g_streamer && g_streamer->clearActorAnimations(id); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_GetPos(int id, float* x, float* y, float* z)
+{ return g_streamer && g_streamer->getActorPos(id, *x, *y, *z); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_SetPos(int id, float x, float y, float z)
+{ return g_streamer && g_streamer->setActorPos(id, x, y, z); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_GetFacingAngle(int id, float* angle)
+{ return g_streamer && g_streamer->getActorFacingAngle(id, *angle); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_SetFacingAngle(int id, float angle)
+{ return g_streamer && g_streamer->setActorFacingAngle(id, angle); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_GetHealth(int id, float* health)
+{ return g_streamer && g_streamer->getActorHealth(id, *health); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_SetHealth(int id, float health)
+{ return g_streamer && g_streamer->setActorHealth(id, health); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_IsInvulnerable(int id)
+{ return g_streamer && g_streamer->isActorInvulnerable(id); }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_SetInvulnerable(int id, bool inv)
+{ return g_streamer && g_streamer->setActorInvulnerable(id, inv); }
+extern "C" SDK_EXPORT int __CDECL Streamer_Actor_GetVirtualWorld(int id)
+{ return g_streamer ? g_streamer->getActorVirtualWorld(id) : 0; }
+extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_SetVirtualWorld(int id, int w)
+{ return g_streamer && g_streamer->setActorVirtualWorld(id, w); }
+
 // ============================================================================
 // Introspection + event callback registration
 // ============================================================================

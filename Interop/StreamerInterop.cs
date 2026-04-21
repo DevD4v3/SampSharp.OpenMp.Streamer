@@ -167,6 +167,75 @@ internal static partial class StreamerInterop
     [return: MarshalAs(UnmanagedType.I1)]
     internal static partial bool Streamer_Checkpoint_IsValid(int cpId);
 
+    // ----- Actors -------------------------------------------------------------------
+
+    [LibraryImport(Lib)]
+    internal static partial int Streamer_Actor_Create(int modelId,
+        float posX, float posY, float posZ, float rotation,
+        [MarshalAs(UnmanagedType.I1)] bool invulnerable, float health, float streamDistance,
+        int worldId, int interiorId, int playerId, int areaId, int priority);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_Destroy(int actorId);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_IsValid(int actorId);
+
+    [LibraryImport(Lib, StringMarshalling = StringMarshalling.Utf8)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_ApplyAnimation(int actorId, string animLib, string animName,
+        float delta,
+        [MarshalAs(UnmanagedType.I1)] bool loop,
+        [MarshalAs(UnmanagedType.I1)] bool lockX,
+        [MarshalAs(UnmanagedType.I1)] bool lockY,
+        [MarshalAs(UnmanagedType.I1)] bool freeze, int timeMs);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_ClearAnimations(int actorId);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static unsafe partial bool Streamer_Actor_GetPos(int actorId, float* x, float* y, float* z);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_SetPos(int actorId, float x, float y, float z);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static unsafe partial bool Streamer_Actor_GetFacingAngle(int actorId, float* angle);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_SetFacingAngle(int actorId, float angle);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static unsafe partial bool Streamer_Actor_GetHealth(int actorId, float* health);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_SetHealth(int actorId, float health);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_IsInvulnerable(int actorId);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_SetInvulnerable(int actorId,
+        [MarshalAs(UnmanagedType.I1)] bool invulnerable);
+
+    [LibraryImport(Lib)]
+    internal static partial int Streamer_Actor_GetVirtualWorld(int actorId);
+
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_Actor_SetVirtualWorld(int actorId, int worldId);
+
     // ----- Event callback registration ---------------------------------------------
 
     [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_PickUpDynamicPickup(delegate* unmanaged[Cdecl]<int, int, void> fn);
