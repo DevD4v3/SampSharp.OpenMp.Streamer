@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <RootNamespace>SampSharp.Streamer.Entities</RootNamespace>
+        <AssemblyName>SampSharp.OpenMp.Streamer</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SampSharp.OpenMp.Core\SampSharp.OpenMp.Core.csproj" />
+        <ProjectReference Include="..\SampSharp.OpenMp.Entities\SampSharp.OpenMp.Entities.csproj" />
+    </ItemGroup>
+
+</Project>
