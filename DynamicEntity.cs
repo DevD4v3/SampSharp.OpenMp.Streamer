@@ -1,3 +1,6 @@
+using System.Collections.Concurrent;
+using SampSharp.Entities;
+
 namespace SampSharp.Streamer.Entities;
 
 /// <summary>
@@ -5,40 +8,58 @@ namespace SampSharp.Streamer.Entities;
 /// карты, checkpoint'ы). В отличие от ECS <see cref="SampSharp.Entities.Component"/>,
 /// <see cref="DynamicEntity"/> живёт в памяти streamer.dll, а не в EntityManager:
 /// уникальность обеспечивается только streamer-id, время жизни — явным Destroy*.
-///
-/// Свойство <see cref="IsAlive"/> переходит в false после <see cref="DestroyEntity"/>,
-/// но сам объект не выкидывается из managed-heap — его можно отбросить по GC.
 /// </summary>
 public abstract class DynamicEntity
 {
+    /// <summary>
+    /// Per-type registry: int streamer-id → EntityId (стабильный Guid).
+    /// Нужен, чтобы при create и при event для одного и того же streamer-item
+    /// <c>entity.Entity</c> был одним и тем же EntityId — legacy VSRP-код использует
+    /// это как ключ в Dictionary.
+    /// </summary>
+    private static readonly ConcurrentDictionary<(System.Type, int), EntityId> _entityRegistry = new();
+
+    private EntityId _entity;
+
     /// <summary>Внутренний streamer ID. Стабилен на всё время жизни сущности.</summary>
     public int Id { get; protected set; }
 
     /// <summary>
-    /// Отображает, жив ли объект в streamer.dll. Может вернуть false если сущность
-    /// была уничтожена через Destroy* или если streamer не был загружен.
+    /// Стабильный EntityId, один и тот же для всех managed-обёрток одного и того же
+    /// streamer-item'а (через <c>Create*</c> или через event).
     /// </summary>
-    public abstract bool IsAlive { get; }
+    public EntityId Entity
+    {
+        get
+        {
+            if (_entity == default)
+                _entity = _entityRegistry.GetOrAdd((GetType(), Id), _ => EntityId.NewEntityId());
+            return _entity;
+        }
+    }
 
-    /// <summary>Уничтожает сущность в streamer.dll. Идемпотентен.</summary>
+    public abstract bool IsAlive { get; }
     public abstract void DestroyEntity();
 
-    /// <summary>Legacy-alias: в старом SampSharp ECS у Component был <c>IsComponentAlive</c>.</summary>
+    /// <summary>Legacy-alias: старый SampSharp Component.IsComponentAlive.</summary>
     public bool IsComponentAlive => IsAlive;
 
     /// <summary>Legacy-alias для pattern matching <c>is {IsValid: true}</c>.</summary>
     public bool IsValid => IsAlive;
 
-    /// <summary>Legacy alias: в старом ECS у Component был метод Destroy().</summary>
+    /// <summary>Legacy alias: Component.Destroy().</summary>
     public void Destroy() => DestroyEntity();
 
     /// <summary>
-    /// Legacy: Component.Entity возвращает <see cref="SampSharp.Entities.EntityId"/>.
-    /// Streamer-items не имеют ECS-entity, но legacy-код иногда читает это свойство.
-    /// Возвращаем default (Empty) EntityId — вызовы типа player.GetComponent(dyn.Entity)
-    /// не будут находить ничего, но компиляция проходит.
+    /// Выкидывает кешированный EntityId из registry. Вызывают реализации
+    /// <see cref="DestroyEntity"/>, чтобы пересоздание sh-item'а с тем же
+    /// streamer-id получало свежий Guid.
     /// </summary>
-    public SampSharp.Entities.EntityId Entity => default;
+    protected void ForgetEntity()
+    {
+        _entityRegistry.TryRemove((GetType(), Id), out _);
+        _entity = default;
+    }
 
     public override string ToString() => $"{GetType().Name}(Id={Id})";
 }

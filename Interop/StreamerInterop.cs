@@ -164,4 +164,28 @@ internal static partial class StreamerInterop
     [LibraryImport(Lib)]
     [return: MarshalAs(UnmanagedType.I1)]
     internal static partial bool Streamer_Checkpoint_IsValid(int cpId);
+
+    // ----- Event callback registration ---------------------------------------------
+
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_PickUpDynamicPickup(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_EnterDynamicCP(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_LeaveDynamicCP(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_EnterDynamicRaceCP(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_LeaveDynamicRaceCP(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_EnterDynamicArea(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_LeaveDynamicArea(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicObjectMoved(delegate* unmanaged[Cdecl]<int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicObjectStreamIn(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicObjectStreamOut(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicPickupStreamIn(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicPickupStreamOut(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicTextLabelStreamIn(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicTextLabelStreamOut(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicCheckpointStreamIn(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicCheckpointStreamOut(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicMapIconStreamIn(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_DynamicMapIconStreamOut(delegate* unmanaged[Cdecl]<int, int, void> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_PlayerEditDynamicObject(delegate* unmanaged[Cdecl]<int, int, int, float, float, float, float, float, float, int> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_PlayerSelectDynamicObject(delegate* unmanaged[Cdecl]<int, int, int, float, float, float, int> fn);
+    [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_PlayerShootDynamicObject(delegate* unmanaged[Cdecl]<int, int, int, float, float, float, int> fn);
 }
