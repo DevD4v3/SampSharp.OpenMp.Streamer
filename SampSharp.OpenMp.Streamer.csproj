@@ -9,9 +9,15 @@
         <AssemblyName>SampSharp.OpenMp.Streamer</AssemblyName>
     </PropertyGroup>
 
+    <!--
+        Depends on openmp-sampsharp-x64-poc which lives as a sibling submodule.
+        When this repo is consumed standalone (без VSRP), переопредели пути через
+        Directory.Build.props или консьюмер-проекту надо самому добавить нужные
+        ProjectReference'ы.
+    -->
     <ItemGroup>
-        <ProjectReference Include="..\SampSharp.OpenMp.Core\SampSharp.OpenMp.Core.csproj" />
-        <ProjectReference Include="..\SampSharp.OpenMp.Entities\SampSharp.OpenMp.Entities.csproj" />
+        <ProjectReference Include="..\openmp-sampsharp-x64-poc\src\SampSharp.OpenMp.Core\SampSharp.OpenMp.Core.csproj" />
+        <ProjectReference Include="..\openmp-sampsharp-x64-poc\src\SampSharp.OpenMp.Entities\SampSharp.OpenMp.Entities.csproj" />
     </ItemGroup>
 
 </Project>
