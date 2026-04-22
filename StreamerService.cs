@@ -38,20 +38,25 @@ public sealed class StreamerService : IStreamerService
         return new DynamicPickup(id, modelId, type, position);
     }
 
-    public DynamicTextLabel CreateDynamicTextLabel(string text, Color color, Vector3 position,
+    public unsafe DynamicTextLabel CreateDynamicTextLabel(string text, Color color, Vector3 position,
         float drawDistance,
         Player? attachedPlayer = null, Vehicle? attachedVehicle = null,
         bool testLos = false,
         int virtualWorld = -1, int interior = -1, Player? player = null,
         float streamDistance = 200f, int areaId = -1, int priority = 0)
     {
-        uint argb = ToArgb(color);
-        int id = StreamerInterop.Streamer_TextLabel_Create(text ?? string.Empty, argb,
-            position.X, position.Y, position.Z, drawDistance,
-            PlayerToId(attachedPlayer), VehicleToId(attachedVehicle),
-            testLos,
-            virtualWorld, interior, PlayerToId(player),
-            streamDistance, areaId, priority);
+        uint rgba = ToRgba(color);
+        var bytes = EncodeNullTerminated(text ?? string.Empty);
+        int id;
+        fixed (byte* ptr = bytes)
+        {
+            id = StreamerInterop.Streamer_TextLabel_Create(ptr, rgba,
+                position.X, position.Y, position.Z, drawDistance,
+                PlayerToId(attachedPlayer), VehicleToId(attachedVehicle),
+                testLos,
+                virtualWorld, interior, PlayerToId(player),
+                streamDistance, areaId, priority);
+        }
         return new DynamicTextLabel(id, text ?? string.Empty, color, position, drawDistance);
     }
 
@@ -96,6 +101,20 @@ public sealed class StreamerService : IStreamerService
     private static int PlayerToId(Player? player) => player is { IsComponentAlive: true } ? player.Id : InvalidId;
     private static int VehicleToId(Vehicle? vehicle) => vehicle is { IsComponentAlive: true } ? vehicle.Id : InvalidId;
 
-    private static uint ToArgb(Color c) => ((uint)c.A << 24) | ((uint)c.R << 16) | ((uint)c.G << 8) | c.B;
     private static uint ToRgba(Color c) => ((uint)c.R << 24) | ((uint)c.G << 16) | ((uint)c.B << 8) | c.A;
+
+    /// <summary>
+    /// Encodes a string via the current <see cref="StringViewMarshaller.Encoding"/>
+    /// and appends a NUL terminator. Used for strings that go DIRECTLY to the client
+    /// through streamer.dll — those require the client encodingю
+    /// </summary>
+    private static byte[] EncodeNullTerminated(string s)
+    {
+        var enc = StringViewMarshaller.Encoding;
+        var byteCount = enc.GetByteCount(s);
+        var buffer = new byte[byteCount + 1];
+        enc.GetBytes(s, buffer);
+        buffer[byteCount] = 0;
+        return buffer;
+    }
 }

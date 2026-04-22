@@ -95,12 +95,23 @@ public sealed class DynamicObject : DynamicEntity
     public bool SetMaterial(int materialIndex, int modelId, string txdName, string textureName, Color materialColor)
         => SetMaterial(materialIndex, modelId, txdName, textureName, ToRgba(materialColor));
 
-    public bool SetMaterialText(int materialIndex, string text,
+    public unsafe bool SetMaterialText(int materialIndex, string text,
         int materialSize = 0, string fontFace = "", int fontSize = 24, bool bold = true,
         uint fontColor = 0xFFFFFFFFu, uint backColor = 0, int alignment = 1)
-        => StreamerInterop.Streamer_Object_SetMaterialText(Id, materialIndex,
-            text ?? string.Empty, materialSize, fontFace ?? string.Empty, fontSize, bold,
-            fontColor, backColor, alignment);
+    {
+        var enc = SampSharp.OpenMp.Core.Std.StringViewMarshaller.Encoding;
+        var s = text ?? string.Empty;
+        var byteCount = enc.GetByteCount(s);
+        var buffer = new byte[byteCount + 1];
+        enc.GetBytes(s, buffer);
+        buffer[byteCount] = 0;
+        fixed (byte* ptr = buffer)
+        {
+            return StreamerInterop.Streamer_Object_SetMaterialText(Id, materialIndex,
+                ptr, materialSize, fontFace ?? string.Empty, fontSize, bold,
+                fontColor, backColor, alignment);
+        }
+    }
 
     public bool SetMaterialText(int materialIndex, string text,
         int materialSize, string fontFace, int fontSize, bool bold,

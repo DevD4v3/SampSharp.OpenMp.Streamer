@@ -90,8 +90,8 @@ internal static partial class StreamerInterop
 
     [LibraryImport(Lib, StringMarshalling = StringMarshalling.Utf8)]
     [return: MarshalAs(UnmanagedType.I1)]
-    internal static partial bool Streamer_Object_SetMaterialText(int objectId, int materialIndex,
-        string text, int materialSize, string fontFace, int fontSize,
+    internal static unsafe partial bool Streamer_Object_SetMaterialText(int objectId, int materialIndex,
+        byte* text, int materialSize, string fontFace, int fontSize,
         [MarshalAs(UnmanagedType.I1)] bool bold, uint fontColor, uint backColor, int alignment);
 
     [LibraryImport(Lib)]
@@ -116,8 +116,8 @@ internal static partial class StreamerInterop
 
     // ----- 3D Text Labels -----------------------------------------------------------
 
-    [LibraryImport(Lib, StringMarshalling = StringMarshalling.Utf8)]
-    internal static partial int Streamer_TextLabel_Create(string text, uint color,
+    [LibraryImport(Lib)]
+    internal static unsafe partial int Streamer_TextLabel_Create(byte* text, uint color,
         float posX, float posY, float posZ, float drawDistance,
         int attachedPlayer, int attachedVehicle,
         [MarshalAs(UnmanagedType.I1)] bool testLos,
@@ -128,9 +128,9 @@ internal static partial class StreamerInterop
     [return: MarshalAs(UnmanagedType.I1)]
     internal static partial bool Streamer_TextLabel_Destroy(int labelId);
 
-    [LibraryImport(Lib, StringMarshalling = StringMarshalling.Utf8)]
+    [LibraryImport(Lib)]
     [return: MarshalAs(UnmanagedType.I1)]
-    internal static partial bool Streamer_TextLabel_Update(int labelId, uint color, string text);
+    internal static unsafe partial bool Streamer_TextLabel_Update(int labelId, uint color, byte* text);
 
     [LibraryImport(Lib)]
     [return: MarshalAs(UnmanagedType.I1)]
