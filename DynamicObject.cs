@@ -1,4 +1,4 @@
-using System.Numerics;
+﻿using System.Numerics;
 using SampSharp.Entities.SAMP;
 using SampSharp.Streamer.Entities.Interop;
 
@@ -65,8 +65,8 @@ public sealed class DynamicObject : DynamicEntity
     public override void DestroyEntity() => StreamerInterop.Streamer_Object_Destroy(Id);
 
     /// <summary>
-    /// Запускает движение объекта к точке. Возвращает длительность движения (мс).
-    /// Возвращает 0 если объект attached или скорость 0.
+    /// Starts moving the object towards the given target. Returns the move
+    /// duration in milliseconds, or 0 if the object is attached or speed is 0.
     /// </summary>
     public int Move(Vector3 target, float speed, Vector3 rotation = default)
         => StreamerInterop.Streamer_Object_Move(Id, target.X, target.Y, target.Z, speed,
