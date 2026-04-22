@@ -1,16 +1,22 @@
 ﻿using System.Numerics;
 using SampSharp.Entities.SAMP;
+using SampSharp.OpenMp.Core.Std;
 using SampSharp.Streamer.Entities.Interop;
 
 namespace SampSharp.Streamer.Entities;
 
 /// <summary>
-/// Реализация <see cref="IStreamerService"/>, пробрасывающая вызовы в streamer.dll
-/// через C-exports в SampSharp.dll (<see cref="StreamerInterop"/>).
+/// <see cref="IStreamerService"/> implementation. Forwards every call into streamer.dll
+/// through the C-exports defined in SampSharp.dll (see <see cref="StreamerInterop"/>).
 /// </summary>
 public sealed class StreamerService : IStreamerService
 {
-    private const int InvalidId = 0xFFFF;
+    // 0xFFFF (INVALID_PLAYER_ID / INVALID_VEHICLE_ID) belongs to the OUTGOING
+    // wire protocol; passing it into the server-side API is wrong because
+    // streamer.dll's addToContainer<bitset<MAX_PLAYERS=1000>>(value) calls
+    // .reset() whenever value >= MAX_PLAYERS — the entity ends up visible to
+    // nobody. Use -1 instead; streamer treats that as .set() (visible to all).
+    private const int BroadcastId = -1;
 
     public bool IsAvailable => StreamerInterop.Streamer_IsAvailable();
 
@@ -98,8 +104,8 @@ public sealed class StreamerService : IStreamerService
         return new DynamicActor(id, modelId, position, rotation);
     }
 
-    private static int PlayerToId(Player? player) => player is { IsComponentAlive: true } ? player.Id : InvalidId;
-    private static int VehicleToId(Vehicle? vehicle) => vehicle is { IsComponentAlive: true } ? vehicle.Id : InvalidId;
+    private static int PlayerToId(Player? player) => player is { IsComponentAlive: true } ? player.Id : BroadcastId;
+    private static int VehicleToId(Vehicle? vehicle) => vehicle is { IsComponentAlive: true } ? vehicle.Id : BroadcastId;
 
     private static uint ToRgba(Color c) => ((uint)c.R << 24) | ((uint)c.G << 16) | ((uint)c.B << 8) | c.A;
 

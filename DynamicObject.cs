@@ -74,6 +74,10 @@ public sealed class DynamicObject : DynamicEntity
 
     public bool Stop() => StreamerInterop.Streamer_Object_Stop(Id);
 
+    /// <summary>Opens the per-player edit mode for this dynamic object on the given player.</summary>
+    public bool Edit(Player player)
+        => player != null && StreamerInterop.Streamer_Object_Edit(player.Id, Id);
+
     public bool AttachTo(DynamicObject parent, Vector3 offset, Vector3 rotation, bool syncRotation = true)
         => StreamerInterop.Streamer_Object_AttachToObject(Id, parent?.Id ?? -1,
             offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, syncRotation);
