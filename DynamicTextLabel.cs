@@ -1,4 +1,4 @@
-using System.Numerics;
+﻿using System.Numerics;
 using SampSharp.Entities.SAMP;
 using SampSharp.Streamer.Entities.Interop;
 
@@ -54,4 +54,5 @@ public sealed class DynamicTextLabel : DynamicEntity
     public override void DestroyEntity() => StreamerInterop.Streamer_TextLabel_Destroy(Id);
 
     private static uint ToArgb(Color c) => ((uint)c.A << 24) | ((uint)c.R << 16) | ((uint)c.G << 8) | c.B;
+    private static uint ToRgba(Color c) => ((uint)c.R << 24) | ((uint)c.G << 16) | ((uint)c.B << 8) | c.A;
 }

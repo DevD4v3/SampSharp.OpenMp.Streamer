@@ -93,7 +93,7 @@ public sealed class DynamicObject : DynamicEntity
             txdName ?? string.Empty, textureName ?? string.Empty, materialColor);
 
     public bool SetMaterial(int materialIndex, int modelId, string txdName, string textureName, Color materialColor)
-        => SetMaterial(materialIndex, modelId, txdName, textureName, ToArgb(materialColor));
+        => SetMaterial(materialIndex, modelId, txdName, textureName, ToRgba(materialColor));
 
     public bool SetMaterialText(int materialIndex, string text,
         int materialSize = 0, string fontFace = "", int fontSize = 24, bool bold = true,
@@ -106,7 +106,7 @@ public sealed class DynamicObject : DynamicEntity
         int materialSize, string fontFace, int fontSize, bool bold,
         Color fontColor, Color backColor, int alignment = 1)
         => SetMaterialText(materialIndex, text, materialSize, fontFace, fontSize, bold,
-            ToArgb(fontColor), ToArgb(backColor), alignment);
+            ToRgba(fontColor), ToRgba(backColor), alignment);
 
-    private static uint ToArgb(Color c) => ((uint)c.A << 24) | ((uint)c.R << 16) | ((uint)c.G << 8) | c.B;
+    private static uint ToRgba(Color c) => ((uint)c.R << 24) | ((uint)c.G << 16) | ((uint)c.B << 8) | c.A;
 }

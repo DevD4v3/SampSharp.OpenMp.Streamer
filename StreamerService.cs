@@ -1,4 +1,4 @@
-using System.Numerics;
+﻿using System.Numerics;
 using SampSharp.Entities.SAMP;
 using SampSharp.Streamer.Entities.Interop;
 
@@ -60,9 +60,9 @@ public sealed class StreamerService : IStreamerService
         float streamDistance = 200f, MapIconType style = MapIconType.Local,
         int areaId = -1, int priority = 0)
     {
-        uint argb = ToArgb(color);
+        uint rgba = ToRgba(color);
         int id = StreamerInterop.Streamer_MapIcon_Create(
-            position.X, position.Y, position.Z, (int)type, argb,
+            position.X, position.Y, position.Z, (int)type, rgba,
             virtualWorld, interior, PlayerToId(player),
             streamDistance, (int)style, areaId, priority);
         return new DynamicMapIcon(id, position, type, color);
@@ -97,4 +97,5 @@ public sealed class StreamerService : IStreamerService
     private static int VehicleToId(Vehicle? vehicle) => vehicle is { IsComponentAlive: true } ? vehicle.Id : InvalidId;
 
     private static uint ToArgb(Color c) => ((uint)c.A << 24) | ((uint)c.R << 16) | ((uint)c.G << 8) | c.B;
+    private static uint ToRgba(Color c) => ((uint)c.R << 24) | ((uint)c.G << 16) | ((uint)c.B << 8) | c.A;
 }
