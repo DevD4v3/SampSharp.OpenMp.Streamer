@@ -1,5 +1,4 @@
 using System.Numerics;
-using SampSharp.Entities;
 using SampSharp.Entities.SAMP;
 
 namespace SampSharp.Streamer.Entities;
@@ -19,50 +18,38 @@ public interface IStreamerService
 
     // Objects
     DynamicObject CreateDynamicObject(int modelId, Vector3 position, Vector3 rotation,
-        int virtualWorld = -1, int interior = -1, EntityId player = default,
+        int virtualWorld = -1, int interior = -1, Player? player = null,
         float streamDistance = 300f, float drawDistance = 0f,
-        EntityId area = default, int priority = 0);
-
-    /// <summary>Legacy-перегрузка: 11 аргументов, где последний — "parent" entity (игнорируется MVP).</summary>
-    DynamicObject CreateDynamicObject(int modelId, Vector3 position, Vector3 rotation,
-        int virtualWorld, int interior, EntityId player,
-        float streamDistance, float drawDistance,
-        EntityId area, int priority, EntityId parent);
-
-    /// <summary>Legacy: areaId как int (PAWN-native style).</summary>
-    DynamicObject CreateDynamicObject(int modelId, Vector3 position, Vector3 rotation,
-        int virtualWorld, int interior, EntityId player,
-        float streamDistance, float drawDistance,
-        int areaId, int priority, EntityId parent = default);
+        int areaId = -1, int priority = 0);
 
     // Pickups
     DynamicPickup CreateDynamicPickup(int modelId, PickupType type, Vector3 position,
-        int virtualWorld = -1, int interior = -1, EntityId player = default,
-        float streamDistance = 200f, EntityId area = default, int priority = 0);
+        int virtualWorld = -1, int interior = -1, Player? player = null,
+        float streamDistance = 200f, int areaId = -1, int priority = 0);
 
     // 3D Text Labels
     DynamicTextLabel CreateDynamicTextLabel(string text, Color color, Vector3 position,
         float drawDistance,
-        EntityId attachedPlayer = default, EntityId attachedVehicle = default,
+        Player? attachedPlayer = null, Vehicle? attachedVehicle = null,
         bool testLos = false,
-        int virtualWorld = -1, int interior = -1, EntityId player = default,
-        float streamDistance = 200f, EntityId area = default, int priority = 0);
+        int virtualWorld = -1, int interior = -1, Player? player = null,
+        float streamDistance = 200f, int areaId = -1, int priority = 0);
 
     // Map Icons
     DynamicMapIcon CreateDynamicMapIcon(Vector3 position, MapIcon type, Color color,
-        int virtualWorld = -1, int interior = -1, EntityId player = default,
+        int virtualWorld = -1, int interior = -1, Player? player = null,
         float streamDistance = 200f, MapIconType style = MapIconType.Local,
-        EntityId area = default, int priority = 0);
+        int areaId = -1, int priority = 0);
 
     // Checkpoints
     DynamicCheckpoint CreateDynamicCheckpoint(Vector3 position, float size,
-        int virtualWorld = -1, int interior = -1, EntityId player = default,
-        float streamDistance = 200f, EntityId area = default, int priority = 0);
+        int virtualWorld = -1, int interior = -1, Player? player = null,
+        float streamDistance = 200f, int areaId = -1, int priority = 0);
 
     // Actors
     DynamicActor CreateDynamicActor(int modelId, Vector3 position, float rotation,
         bool invulnerable = true, float health = 100f,
         float streamDistance = 300f,
-        int virtualWorld = -1, int interior = -1, EntityId player = default,
-        EntityId area = default, int priority = 0);
+        int virtualWorld = -1, int interior = -1, Player? player = null,
+        int areaId = -1, int priority = 0);
 }

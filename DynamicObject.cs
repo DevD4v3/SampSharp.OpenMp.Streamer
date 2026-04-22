@@ -80,18 +80,13 @@ public sealed class DynamicObject : DynamicEntity
 
     public bool AttachTo(Player player, Vector3 offset, Vector3 rotation)
         => player != null
-           && StreamerInterop.Streamer_Object_AttachToPlayer(Id, player.Entity.Handle,
+           && StreamerInterop.Streamer_Object_AttachToPlayer(Id, player.Id,
                offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z);
 
     public bool AttachTo(Vehicle vehicle, Vector3 offset, Vector3 rotation)
         => vehicle != null
-           && StreamerInterop.Streamer_Object_AttachToVehicle(Id, vehicle.Entity.Handle,
+           && StreamerInterop.Streamer_Object_AttachToVehicle(Id, vehicle.Id,
                offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z);
-
-    // Legacy overloads, accepting EntityId directly (used in VSRP code before ECS-split).
-    public bool AttachTo(SampSharp.Entities.EntityId parentEntity, Vector3 offset, Vector3 rotation, bool syncRotation = true)
-        => StreamerInterop.Streamer_Object_AttachToObject(Id, parentEntity.Handle,
-            offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, syncRotation);
 
     public bool SetMaterial(int materialIndex, int modelId, string txdName, string textureName, uint materialColor = 0)
         => StreamerInterop.Streamer_Object_SetMaterial(Id, materialIndex, modelId,
