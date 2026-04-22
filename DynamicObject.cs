@@ -96,8 +96,15 @@ public sealed class DynamicObject : DynamicEntity
         => StreamerInterop.Streamer_Object_SetMaterial(Id, materialIndex, modelId,
             txdName ?? string.Empty, textureName ?? string.Empty, materialColor);
 
+    // Materials on objects use SAMP's "ARGB" packing (alpha in the high byte —
+    // 0xAARRGGBB), which is the OPPOSITE of the streamer's 3D-text-label color
+    // packing (RGBA, 0xRRGGBBAA). SetObjectMaterial / SetObjectMaterialText pass
+    // the value through to the SA:MP RPC stream, which the 0.3.7 client decodes
+    // assuming alpha-high. Mixing the two packings gives blue text on a yellow
+    // backdrop (Color.Black RGBA = 0x000000FF, read as ARGB = α=0/B=255 = invisible
+    // blue) — see VSRP Blackboards.cs.
     public bool SetMaterial(int materialIndex, int modelId, string txdName, string textureName, Color materialColor)
-        => SetMaterial(materialIndex, modelId, txdName, textureName, ToRgba(materialColor));
+        => SetMaterial(materialIndex, modelId, txdName, textureName, ToArgb(materialColor));
 
     public unsafe bool SetMaterialText(int materialIndex, string text,
         int materialSize = 0, string fontFace = "", int fontSize = 24, bool bold = true,
@@ -121,7 +128,8 @@ public sealed class DynamicObject : DynamicEntity
         int materialSize, string fontFace, int fontSize, bool bold,
         Color fontColor, Color backColor, int alignment = 1)
         => SetMaterialText(materialIndex, text, materialSize, fontFace, fontSize, bold,
-            ToRgba(fontColor), ToRgba(backColor), alignment);
+            ToArgb(fontColor), ToArgb(backColor), alignment);
 
-    private static uint ToRgba(Color c) => ((uint)c.R << 24) | ((uint)c.G << 16) | ((uint)c.B << 8) | c.A;
+    /// <summary>SAMP material color packing: 0xAARRGGBB (alpha in high byte).</summary>
+    private static uint ToArgb(Color c) => ((uint)c.A << 24) | ((uint)c.R << 16) | ((uint)c.G << 8) | c.B;
 }
