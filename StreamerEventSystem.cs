@@ -161,7 +161,8 @@ internal sealed class StreamerEventSystem : ISystem
         float rx, float ry, float rz)
     {
         var res = _dispatcher?.Invoke("OnPlayerEditDynamicObject",
-            PlayerEntity(p), WrapObject(o), r, x, y, z, rx, ry, rz);
+            PlayerEntity(p), WrapObject(o), (EditObjectResponse)r,
+            new Vector3(x, y, z), new Vector3(rx, ry, rz));
         return res is true ? 1 : 0;
     }
 
