@@ -142,6 +142,24 @@ struct IStreamerComponent : public IExtension
     virtual int  getActorVirtualWorld(int actorId) = 0;
     virtual bool setActorVirtualWorld(int actorId, int worldId) = 0;
 
+    // Telemetry (VS:RP fork) — per-phase timings + stream counters since last reset.
+    virtual uint64_t getPhaseTimeNs(int type) = 0;
+    virtual uint64_t getPhaseAvgUs(int type) = 0;
+    virtual uint64_t getPhaseTickCount() = 0;
+    virtual uint64_t getPhaseStreamInCount(int type) = 0;
+    virtual uint64_t getPhaseStreamOutCount(int type) = 0;
+    virtual void     resetPhaseStats() = 0;
+
+    // Anti-flicker hysteresis (VS:RP fork).
+    virtual float getHysteresisFactor(int type) = 0;
+    virtual bool  setHysteresisFactor(int type, float value) = 0;
+
+    // Two-tier grid (VS:RP fork).
+    virtual float getCoarseCellSize() = 0;
+    virtual bool  setCoarseCellSize(float size) = 0;
+    virtual float getCoarseCellDistance() = 0;
+    virtual bool  setCoarseCellDistance(float distance) = 0;
+
     virtual void addEventHandler(IStreamerEventHandler* handler) = 0;
     virtual void removeEventHandler(IStreamerEventHandler* handler) = 0;
 

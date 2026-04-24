@@ -259,4 +259,37 @@ internal static partial class StreamerInterop
     [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_PlayerEditDynamicObject(delegate* unmanaged[Cdecl]<int, int, int, float, float, float, float, float, float, int> fn);
     [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_PlayerSelectDynamicObject(delegate* unmanaged[Cdecl]<int, int, int, float, float, float, int> fn);
     [LibraryImport(Lib)] internal static unsafe partial void Streamer_SetCallback_PlayerShootDynamicObject(delegate* unmanaged[Cdecl]<int, int, int, float, float, float, int> fn);
+
+    // ----- Telemetry (VS:RP fork) --------------------------------------------------
+    // Per-phase cumulative timings + stream-in/out counts since last reset.
+    // `type` is one of STREAMER_TYPE_* (see StreamerType enum). Returns 0 if
+    // streamer.dll isn't loaded.
+
+    [LibraryImport(Lib)] internal static partial ulong Streamer_GetPhaseTimeNs(int type);
+    [LibraryImport(Lib)] internal static partial ulong Streamer_GetPhaseAvgUs(int type);
+    [LibraryImport(Lib)] internal static partial ulong Streamer_GetPhaseTickCount();
+    [LibraryImport(Lib)] internal static partial ulong Streamer_GetPhaseStreamInCount(int type);
+    [LibraryImport(Lib)] internal static partial ulong Streamer_GetPhaseStreamOutCount(int type);
+    [LibraryImport(Lib)] internal static partial void Streamer_ResetPhaseStats();
+
+    // ----- Anti-flicker hysteresis (VS:RP fork) ----------------------------------
+    // Per-type [1.0, 10.0]. Default 1.0 = legacy, no hysteresis.
+
+    [LibraryImport(Lib)] internal static partial float Streamer_GetHysteresisFactor(int type);
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_SetHysteresisFactor(int type, float value);
+
+    // ----- Two-tier grid (VS:RP fork) --------------------------------------------
+    // Items with streamDistance in (cellDistance, coarseCellDistance] bucket into
+    // coarser cells. Distance = 0 disables the tier.
+
+    [LibraryImport(Lib)] internal static partial float Streamer_GetCoarseCellSize();
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_SetCoarseCellSize(float size);
+    [LibraryImport(Lib)] internal static partial float Streamer_GetCoarseCellDistance();
+    [LibraryImport(Lib)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static partial bool Streamer_SetCoarseCellDistance(float distance);
 }

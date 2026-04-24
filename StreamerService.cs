@@ -104,6 +104,38 @@ public sealed class StreamerService : IStreamerService
         return new DynamicActor(id, modelId, position, rotation);
     }
 
+    // ---- Telemetry (VS:RP fork) ---------------------------------------------------
+
+    public StreamerPhaseStats GetPhaseStats(StreamerType type)
+    {
+        int t = (int)type;
+        return new StreamerPhaseStats(
+            Type: type,
+            CumulativeTimeNs: StreamerInterop.Streamer_GetPhaseTimeNs(t),
+            AverageMicrosecondsPerPlayerTick: StreamerInterop.Streamer_GetPhaseAvgUs(t),
+            StreamInCount: StreamerInterop.Streamer_GetPhaseStreamInCount(t),
+            StreamOutCount: StreamerInterop.Streamer_GetPhaseStreamOutCount(t));
+    }
+
+    public ulong GetPhaseTickCount() => StreamerInterop.Streamer_GetPhaseTickCount();
+
+    public void ResetPhaseStats() => StreamerInterop.Streamer_ResetPhaseStats();
+
+    // ---- Hysteresis (VS:RP fork) --------------------------------------------------
+
+    public float GetHysteresisFactor(StreamerType type) =>
+        StreamerInterop.Streamer_GetHysteresisFactor((int)type);
+
+    public bool SetHysteresisFactor(StreamerType type, float factor) =>
+        StreamerInterop.Streamer_SetHysteresisFactor((int)type, factor);
+
+    // ---- Two-tier grid (VS:RP fork) ----------------------------------------------
+
+    public float CoarseCellSize => StreamerInterop.Streamer_GetCoarseCellSize();
+    public bool TrySetCoarseCellSize(float size) => StreamerInterop.Streamer_SetCoarseCellSize(size);
+    public float CoarseCellDistance => StreamerInterop.Streamer_GetCoarseCellDistance();
+    public bool TrySetCoarseCellDistance(float distance) => StreamerInterop.Streamer_SetCoarseCellDistance(distance);
+
     private static int PlayerToId(Player? player) => player is { IsComponentAlive: true } ? player.Id : BroadcastId;
     private static int VehicleToId(Vehicle? vehicle) => vehicle is { IsComponentAlive: true } ? vehicle.Id : BroadcastId;
 

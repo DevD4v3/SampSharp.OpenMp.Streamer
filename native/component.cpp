@@ -281,6 +281,46 @@ extern "C" SDK_EXPORT bool __CDECL Streamer_Actor_SetVirtualWorld(int id, int w)
 
 extern "C" SDK_EXPORT bool __CDECL Streamer_IsAvailable() { return g_streamer != nullptr; }
 
+// ============================================================================
+// Telemetry (VS:RP fork) — per-phase timing + stream-in/out counters.
+// Returns 0 when streamer.dll is missing. `type` is one of STREAMER_TYPE_*.
+// ============================================================================
+
+extern "C" SDK_EXPORT uint64_t __CDECL Streamer_GetPhaseTimeNs(int type)
+{ return g_streamer ? g_streamer->getPhaseTimeNs(type) : 0; }
+extern "C" SDK_EXPORT uint64_t __CDECL Streamer_GetPhaseAvgUs(int type)
+{ return g_streamer ? g_streamer->getPhaseAvgUs(type) : 0; }
+extern "C" SDK_EXPORT uint64_t __CDECL Streamer_GetPhaseTickCount()
+{ return g_streamer ? g_streamer->getPhaseTickCount() : 0; }
+extern "C" SDK_EXPORT uint64_t __CDECL Streamer_GetPhaseStreamInCount(int type)
+{ return g_streamer ? g_streamer->getPhaseStreamInCount(type) : 0; }
+extern "C" SDK_EXPORT uint64_t __CDECL Streamer_GetPhaseStreamOutCount(int type)
+{ return g_streamer ? g_streamer->getPhaseStreamOutCount(type) : 0; }
+extern "C" SDK_EXPORT void __CDECL Streamer_ResetPhaseStats()
+{ if (g_streamer) g_streamer->resetPhaseStats(); }
+
+// ============================================================================
+// Anti-flicker hysteresis (VS:RP fork).
+// ============================================================================
+
+extern "C" SDK_EXPORT float __CDECL Streamer_GetHysteresisFactor(int type)
+{ return g_streamer ? g_streamer->getHysteresisFactor(type) : 1.0f; }
+extern "C" SDK_EXPORT bool __CDECL Streamer_SetHysteresisFactor(int type, float value)
+{ return g_streamer && g_streamer->setHysteresisFactor(type, value); }
+
+// ============================================================================
+// Two-tier grid (VS:RP fork).
+// ============================================================================
+
+extern "C" SDK_EXPORT float __CDECL Streamer_GetCoarseCellSize()
+{ return g_streamer ? g_streamer->getCoarseCellSize() : 0.0f; }
+extern "C" SDK_EXPORT bool __CDECL Streamer_SetCoarseCellSize(float size)
+{ return g_streamer && g_streamer->setCoarseCellSize(size); }
+extern "C" SDK_EXPORT float __CDECL Streamer_GetCoarseCellDistance()
+{ return g_streamer ? g_streamer->getCoarseCellDistance() : 0.0f; }
+extern "C" SDK_EXPORT bool __CDECL Streamer_SetCoarseCellDistance(float distance)
+{ return g_streamer && g_streamer->setCoarseCellDistance(distance); }
+
 extern "C" SDK_EXPORT void __CDECL Streamer_SetCallback_PickUpDynamicPickup(FnPlayerInt fn)      { cb_pickup = fn; }
 extern "C" SDK_EXPORT void __CDECL Streamer_SetCallback_EnterDynamicCP(FnPlayerInt fn)          { cb_enterCp = fn; }
 extern "C" SDK_EXPORT void __CDECL Streamer_SetCallback_LeaveDynamicCP(FnPlayerInt fn)          { cb_leaveCp = fn; }

@@ -52,4 +52,42 @@ public interface IStreamerService
         float streamDistance = 300f,
         int virtualWorld = -1, int interior = -1, Player? player = null,
         int areaId = -1, int priority = 0);
+
+    // ========================================================================
+    // Telemetry (VS:RP fork) — cumulative since last ResetPhaseStats().
+    // Call ResetPhaseStats() every ~1 minute for rolling-window stats.
+    // ========================================================================
+
+    /// <summary>Snapshot of timing + stream counts for one streamer type.</summary>
+    StreamerPhaseStats GetPhaseStats(StreamerType type);
+
+    /// <summary>Total per-player discovery ticks recorded since the last reset.</summary>
+    ulong GetPhaseTickCount();
+
+    /// <summary>Zero every telemetry counter.</summary>
+    void ResetPhaseStats();
+
+    // ========================================================================
+    // Anti-flicker hysteresis (VS:RP fork). When a player sits on the boundary
+    // of an item's stream distance, items ping-pong in/out every tick. With
+    // factor > 1.0 the stream-out check is delayed until the player is
+    // factor × streamDistance away. Applies to Object / MapIcon / TextLabel;
+    // other types ignore the setting.
+    // ========================================================================
+
+    float GetHysteresisFactor(StreamerType type);
+    /// <summary>Valid range [1.0, 10.0]. Returns false on invalid input.</summary>
+    bool SetHysteresisFactor(StreamerType type, float factor);
+
+    // ========================================================================
+    // Two-tier grid (VS:RP fork). Items with streamDistance between
+    // cellDistance and CoarseCellDistance bucket into larger coarse cells
+    // instead of the O(N) globalCell catch-all. CoarseCellDistance = 0
+    // disables the tier. Setters rebuild the grid synchronously.
+    // ========================================================================
+
+    float CoarseCellSize { get; }
+    bool TrySetCoarseCellSize(float size);
+    float CoarseCellDistance { get; }
+    bool TrySetCoarseCellDistance(float distance);
 }
