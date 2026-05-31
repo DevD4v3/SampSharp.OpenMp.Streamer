@@ -1,23 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <RootNamespace>SampSharp.Streamer.Entities</RootNamespace>
         <AssemblyName>SampSharp.OpenMp.Streamer</AssemblyName>
+        <PackageId>SampSharp.OpenMp.Streamer</PackageId>
+        <Version>1.0.0-prerelease2</Version>
+        <Authors>OpenSamp</Authors>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Description>SampSharp bindings for the open.mp streamer component.</Description>
+        <PackageProjectUrl>https://github.com/OpenSamp/SampSharp.OpenMp.Streamer</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/OpenSamp/SampSharp.OpenMp.Streamer</RepositoryUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
-    <!--
-        Depends on openmp-sampsharp-x64-poc which lives as a sibling submodule.
-        When this repo is consumed standalone (без VSRP), переопредели пути через
-        Directory.Build.props или консьюмер-проекту надо самому добавить нужные
-        ProjectReference'ы.
-    -->
     <ItemGroup>
-        <ProjectReference Include="..\openmp-sampsharp-x64-poc\src\SampSharp.OpenMp.Core\SampSharp.OpenMp.Core.csproj" />
-        <ProjectReference Include="..\openmp-sampsharp-x64-poc\src\SampSharp.OpenMp.Entities\SampSharp.OpenMp.Entities.csproj" />
+        <PackageReference Include="SampSharp.OpenMp.Core" Version="1.0.0-prerelease2" />
+        <PackageReference Include="SampSharp.OpenMp.Entities" Version="1.0.0-prerelease2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="README.md" Pack="True" PackagePath="" />
+      <None Include="LICENSE" Pack="True" PackagePath="" />
     </ItemGroup>
 
 </Project>
