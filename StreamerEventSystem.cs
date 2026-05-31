@@ -160,26 +160,47 @@ internal sealed class StreamerEventSystem : ISystem
     private static int OnEditObject(int p, int o, int r, float x, float y, float z,
         float rx, float ry, float rz)
     {
-        var res = _dispatcher?.Invoke("OnPlayerEditDynamicObject",
-            PlayerEntity(p), WrapObject(o), (EditObjectResponse)r,
-            new Vector3(x, y, z), new Vector3(rx, ry, rz));
-        return res is true ? 1 : 0;
+        bool res = _dispatcher?.InvokeAs(
+            "OnPlayerEditDynamicObject",
+            false,
+            [
+                PlayerEntity(p),
+                WrapObject(o),
+                (EditObjectResponse)r,
+                new Vector3(x, y, z),
+                new Vector3(rx, ry, rz)
+            ]) ?? false;
+        return res ? 1 : 0;
     }
 
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static int OnSelectObject(int p, int o, int m, float x, float y, float z)
     {
-        var res = _dispatcher?.Invoke("OnPlayerSelectDynamicObject",
-            PlayerEntity(p), WrapObject(o), m, new Vector3(x, y, z));
-        return res is true ? 1 : 0;
+        bool res = _dispatcher?.InvokeAs(
+            "OnPlayerSelectDynamicObject",
+            false,
+            [
+                PlayerEntity(p),
+                WrapObject(o),
+                m,
+                new Vector3(x, y, z)
+            ]) ?? false;
+        return res ? 1 : 0;
     }
 
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static int OnShootObject(int p, int w, int o, float x, float y, float z)
     {
-        var res = _dispatcher?.Invoke("OnPlayerShootDynamicObject",
-            PlayerEntity(p), w, WrapObject(o), new Vector3(x, y, z));
-        return res is false ? 2 /* veto */ : 0 /* continue */;
+        bool res = _dispatcher?.InvokeAs(
+            "OnPlayerShootDynamicObject",
+            true,
+            [
+                PlayerEntity(p),
+                w,
+                WrapObject(o),
+                new Vector3(x, y, z)
+            ]) ?? true;
+        return res ? 0 : 2;
     }
 }
 
