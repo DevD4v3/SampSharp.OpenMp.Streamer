@@ -24,12 +24,12 @@ namespace
     IStreamerComponent* g_streamer = nullptr;
 
     // ---- Managed callback function pointers ----
-    using FnPlayerInt = void (__cdecl*)(int, int);
-    using FnIntInt    = void (__cdecl*)(int, int);
-    using FnInt       = void (__cdecl*)(int);
-    using FnEdit      = int  (__cdecl*)(int, int, int, float, float, float, float, float, float);
-    using FnSelect    = int  (__cdecl*)(int, int, int, float, float, float);
-    using FnShoot     = int  (__cdecl*)(int, int, int, float, float, float);
+    using FnPlayerInt = void (__CDECL*)(int, int);
+    using FnIntInt    = void (__CDECL*)(int, int);
+    using FnInt       = void (__CDECL*)(int);
+    using FnEdit      = int  (__CDECL*)(int, int, int, float, float, float, float, float, float);
+    using FnSelect    = int  (__CDECL*)(int, int, int, float, float, float);
+    using FnShoot     = int  (__CDECL*)(int, int, int, float, float, float);
 
     FnPlayerInt cb_pickup        = nullptr;
     FnPlayerInt cb_enterCp       = nullptr;

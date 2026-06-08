@@ -2,7 +2,6 @@ bin/
 obj/
 build/
 artifacts/
-external/open.mp-sdk/
 *.user
 .vs/
 .idea/
